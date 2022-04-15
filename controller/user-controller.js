@@ -2,7 +2,7 @@ const db = require("../config/db");
 const bcrypt = require("bcrypt");
 const generateToken = require("../midleware/authentication").generateToken;
 
-exports.register = async(req, res) => {
+exports.signup = async(req, res) => {
     const body = req.body;
     const email = body.email;
     const password = body.password;
@@ -19,16 +19,15 @@ exports.register = async(req, res) => {
             const hash = bcrypt.hashSync(password, salt);
             db.query(
                 "INSERT INTO users (email, password) values($1, $2)", [email, hash],
-                (err, user) => {
+                (err, result) => {
                     if (err) {
                         res.status(401).json(err);
                     }
                     const token = generateToken({
-                        id: user.user_id,
-                        email: user.email,
+                        email: email,
                     });
                     res.status(200).json({
-                        message: "succes add user",
+                        message: "registration succes",
                         email: email,
                         token: token,
                     });
@@ -50,9 +49,11 @@ exports.signIn = async(req, res) => {
                     message: "email not found",
                 });
             }
-            let userPassword;
+            let userPassword, user_id, user_email;
             user.rows.forEach((userr) => {
                 userPassword = userr.password;
+                user_id = userr.id;
+                user_email = userr.email;
             });
             const isValid = bcrypt.compareSync(password, userPassword);
             if (!isValid) {
@@ -61,8 +62,8 @@ exports.signIn = async(req, res) => {
                 });
             }
             const token = generateToken({
-                id: user.id,
-                email: user.email,
+                id: user_id,
+                email: user_email,
             });
             res.status(200).send({
                 status: "SUKSES",

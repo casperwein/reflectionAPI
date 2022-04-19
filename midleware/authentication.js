@@ -2,14 +2,14 @@ const jwt = require("jsonwebtoken");
 const privatKey = "secret";
 
 const verify = (req, res, next) => {
-    const token = req.headers["auth"];
-    jwt.verify(token, privatKey, (err, endcoded) => {
+    const token = req.headers["authentication"];
+    jwt.verify(token, privatKey, (err, decoded) => {
         if (err) {
             return res.status(401).send({
-                err,
+                err: err,
             });
         }
-        req.user = decoded.user;
+        req.id = decoded.id;
         next();
     });
 };

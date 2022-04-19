@@ -1,10 +1,17 @@
 const db = require("../config/db");
 
-exports.getReflections = (req, res) => {
-    const queryGet = "SELECT * FROM reflections";
-    db.query(queryGet)
+exports.getReflections = async(req, res) => {
+    const owner_id = req.id;
+    const queryGet = "SELECT * FROM reflections WHERE owner_id = $1";
+    await db
+        .query(queryGet, [owner_id])
         .then((reflections) => {
-            res.status(400).json({
+            if (!reflections.rows.length) {
+                res.status(200).json({
+                    message: `User with id ${owner_id} have not reflections`,
+                });
+            }
+            res.status(200).json({
                 message: "ALL REFLECTIONS",
                 data: reflections.rows,
             });

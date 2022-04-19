@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const privatKey = "secret";
 
 const verify = (req, res, next) => {
-    const token = req.headers["authentication"];
+    const token = req.headers["x-access-token"];
     jwt.verify(token, privatKey, (err, decoded) => {
         if (err) {
             return res.status(401).send({

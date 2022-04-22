@@ -18,7 +18,7 @@ const authorization = async(req, res, next) => {
                 });
             } else if (reflectionsOwner_id !== owner_id) {
                 return res.status(402).json({
-                    message: `User id with ${owner_id} not match with this reflections`,
+                    message: `User id  ${owner_id} not match with this reflections`,
                 });
             } else {
                 return next();

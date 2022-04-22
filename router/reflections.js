@@ -2,18 +2,25 @@ const router = require("express").Router();
 const reflectionsController = require("../controller/reflections-controller");
 const verify = require("../midleware/authentication").verify;
 const authorization = require("../midleware/authorization").authorization;
+const {
+    reflectionsValidation,
+    reflectionsById,
+} = require("../midleware/validation");
 
 router.use(verify);
-router.post("/postreflections", reflectionsController.postReflections);
-router.get("/reflections", reflectionsController.getReflections);
+router.post("/", reflectionsValidation, reflectionsController.postReflections);
+router.get("/", reflectionsController.getReflections);
 router.delete(
-    "/delete/:id",
+    "/:id",
+    reflectionsById,
     authorization,
     reflectionsController.deleteReflections
 );
 router.put(
-    "/update/:id",
+    "/:id",
+    reflectionsById,
     authorization,
+    reflectionsValidation,
     reflectionsController.updateReflections
 );
 

@@ -32,8 +32,9 @@ exports.postReflections = async(req, res) => {
     const take_away = body.take_away;
 
     const create =
-        "INSERT into reflections (success, low_point, take_away, owner_id) VALUES ($1, $2, $3, $4)";
-    db.query(create, [success, low_point, take_away, owner_id])
+        "INSERT into reflections (success, low_point, take_away, owner_id) VALUES ($1, $2, $3, $4) returning *";
+    await db
+        .query(create, [success, low_point, take_away, owner_id])
         .then((reflections) => {
             res.status(201).json({
                 status: "SUCCESS",
@@ -42,6 +43,7 @@ exports.postReflections = async(req, res) => {
             });
         })
         .catch((e) => {
+            console.log(e);
             res.status(503).json({
                 status: "FAIL",
                 message: "INTERNAL SERVER ERROR",
@@ -55,12 +57,12 @@ exports.updateReflections = (req, res) => {
     const low_point = req.body.low_point;
     const take_away = req.body.take_away;
     const update =
-        "UPDATE reflections SET success = $1, low_point = $2, take_away = $3 WHERE id = $4";
+        "UPDATE reflections SET success = $1, low_point = $2, take_away = $3 WHERE id = $4 returning * ";
     db.query(update, [success, low_point, take_away, id])
         .then((reflections) => {
             res.status(200).json({
                 message: "UPDATE SUCCES",
-                reflections: reflections,
+                reflections: reflections.rows,
             });
         })
         .catch((e) => {

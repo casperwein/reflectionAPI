@@ -6,11 +6,6 @@ exports.getReflections = async(req, res) => {
     await db
         .query(queryGet, [owner_id])
         .then((reflections) => {
-            // if (!reflections.rows.length) {
-            //     res.status(200).json({
-            //         message: `User with id ${owner_id} have not reflections`,
-            //     });
-            // }
             return res.status(200).json({
                 message: "ALL REFLECTIONS",
                 data: reflections.rows,

@@ -13,7 +13,6 @@ exports.register = async(req, res) => {
                 res.status(402).json({
                     message: "email already exist",
                 });
-                console.log(result);
             } else {
                 const salt = bcrypt.genSaltSync(10);
                 const hash = bcrypt.hashSync(password, salt);

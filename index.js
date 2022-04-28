@@ -13,3 +13,9 @@ app.use("/api/v1/reflections", reflectionsRouter);
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+module.exports = {
+    userRouter,
+    reflectionsRouter,
+    app,
+};

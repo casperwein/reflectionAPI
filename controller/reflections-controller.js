@@ -1,4 +1,4 @@
-const db = require("../config/db");
+const db = require("../config/db").pool;
 
 exports.getReflections = async(req, res) => {
     const owner_id = req.id;
@@ -6,19 +6,19 @@ exports.getReflections = async(req, res) => {
     await db
         .query(queryGet, [owner_id])
         .then((reflections) => {
-            if (!reflections.rows.length) {
-                res.status(200).json({
-                    message: `User with id ${owner_id} have not reflections`,
-                });
-            }
-            res.status(200).json({
+            // if (!reflections.rows.length) {
+            //     res.status(200).json({
+            //         message: `User with id ${owner_id} have not reflections`,
+            //     });
+            // }
+            return res.status(200).json({
                 message: "ALL REFLECTIONS",
                 data: reflections.rows,
             });
         })
         .catch((e) => {
             console.log(e);
-            req.status(503).json({
+            res.status(503).json({
                 message: "INTERNAL SERVER ERROR",
             });
         });
@@ -36,7 +36,7 @@ exports.postReflections = async(req, res) => {
     await db
         .query(create, [success, low_point, take_away, owner_id])
         .then((reflections) => {
-            res.status(201).json({
+            res.status(200).json({
                 status: "SUCCESS",
                 message: "Reflection Successfully Created",
                 data: reflections.rows,
@@ -51,14 +51,15 @@ exports.postReflections = async(req, res) => {
         });
 };
 
-exports.updateReflections = (req, res) => {
+exports.updateReflections = async(req, res) => {
     const id = req.params.id;
     const success = req.body.success;
     const low_point = req.body.low_point;
     const take_away = req.body.take_away;
     const update =
         "UPDATE reflections SET success = $1, low_point = $2, take_away = $3 WHERE id = $4 returning * ";
-    db.query(update, [success, low_point, take_away, id])
+    await db
+        .query(update, [success, low_point, take_away, id])
         .then((reflections) => {
             res.status(200).json({
                 message: "UPDATE SUCCES",
@@ -74,10 +75,11 @@ exports.updateReflections = (req, res) => {
         });
 };
 
-exports.deleteReflections = (req, res) => {
+exports.deleteReflections = async(req, res) => {
     const id = req.params.id;
     const queryDelete = "DELETE FROM reflections WHERE id = $1";
-    db.query(queryDelete, [id])
+    await db
+        .query(queryDelete, [id])
         .then(() => {
             res.status(200).json({
                 message: "DELETED SUCCES",

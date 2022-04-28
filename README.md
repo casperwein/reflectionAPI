@@ -1,6 +1,6 @@
 # reflectionAPI
 The reflectionAPI application is used to note and measure a person's achievements.
-It is created with nodejs, express, postgress and furnished with authentication and auctions processes by JWT.
+It is created with nodejs, express, postgress and furnished with authentication and authorization processes by JWT.
 Before accessing reflection data, the user must register and login first.
 You can use the following endpoint to access the reflectionAPI application.
 

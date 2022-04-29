@@ -49,7 +49,6 @@ exports.login = async(req, res) => {
                     message: "email not found",
                 });
             }
-            console.log(user);
             const isValid = bcrypt.compareSync(password, user.rows[0].password);
             if (!isValid) {
                 return res.status(401).send({

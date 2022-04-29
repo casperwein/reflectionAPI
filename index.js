@@ -1,6 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 4000;
+console.log(port);
+// console.log(process.env);
 const userRouter = require("./router/user.js");
 const reflectionsRouter = require("./router/reflections.js");
 
